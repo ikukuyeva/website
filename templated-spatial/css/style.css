@@ -444,9 +444,9 @@
 
 		.feature-grid .feature {
 			display: inline-block;
-			float: left;
+			float: center;
 			margin-bottom: 3em;
-			width: 50%;
+			width: 100%;
 		}
 
 			.feature-grid .feature .content {
@@ -454,7 +454,7 @@
 			}
 
 			.feature-grid .feature .image {
-				width: 30%;
+				width: 20%;
 			}
 
 				.feature-grid .feature .image img {
