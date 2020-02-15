@@ -1,4 +1,6 @@
-### Goal: Get all links from website, and then check that they all work
+"""Purpose of script: Get all links from website, and then check that they all
+   work. Only surface those that need to be checked manually.
+"""
 
 # --- Step 0:
 # Create virtual env: "env-links", activate it, and install packages:
