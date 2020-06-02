@@ -52,6 +52,7 @@ if __name__ == '__main__':
                     print(f"{index}: {request.status_code} for {url}")
             except requests.exceptions.SSLError:
                 print(f"{index}: {request.status_code} for {url}")
-
+            except requests.exceptions.MissingSchema:
+            	print(f"{index}: {request.status_code} for {url}")
         print("--- Process complete.")
         print()
