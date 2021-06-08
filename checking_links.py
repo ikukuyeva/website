@@ -1,10 +1,17 @@
-"""Purpose of script: Get all links from website, and then check that they all
+"""
+   Purpose of script: Get all links from website, and then check that they all
    work. Only surface those that need to be checked manually.
+
+    --- Step 0:
+        Create virtual env: "env-links", activate it, and install packages:
+        pip3 install -r requirements.txt
+
+    --- Step 1: After virtual env is created:
+        cd Documents/Consulting/Website/
+        source Envs/env-links/bin/activate
+        python3 checking_links.py
 """
 
-# --- Step 0:
-# Create virtual env: "env-links", activate it, and install packages:
-# pip3 install -r requirements.txt
 
 from bs4 import BeautifulSoup
 from bs4.dammit import EncodingDetector
