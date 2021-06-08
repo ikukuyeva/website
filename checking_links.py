@@ -17,7 +17,43 @@ from bs4 import BeautifulSoup
 from bs4.dammit import EncodingDetector
 import requests
 
-WEBSITE_URL = ["http://www.ikukuyeva.com", "http://www.kukuyevaconsulting.com/"] 
+WEBSITE_URL = ["https://www.ikukuyeva.com"] 
+
+def get_all_urls_on_page(webpage):
+    resp = requests.get(webpage)
+    # Note: Content of page is in: resp.content
+
+    # Parse website with Beautiful Soup, per
+    # https://stackoverflow.com/questions/1080411/retrieve-links-from-web-page-using-python-and-beautifulsoup
+    html_encoding = EncodingDetector.find_declared_encoding(resp.content,
+                                                            is_html=True)
+    soup = BeautifulSoup(resp.content,
+                         from_encoding=html_encoding,
+                         features="html.parser")
+
+    url_list = []
+    for link in soup.find_all('a', href=True):
+        if link['href'] != "#ContactMe":
+            url_list.append(link['href'])
+
+        # Remove duplicates:
+    url_list = list(set(url_list))
+    url_list = [ link for link in url_list if link[0] != "#" ]
+    return url_list
+
+
+def get_webpage_status(webpage):
+    """Check that web page exists/load."""
+    try:
+        # Parsing requests output, per:
+        # https://stackoverflow.com/questions/16778435/python-check-if-website-exists
+        request = requests.get(webpage)
+        if request.status_code != 200:
+            return request.status_code
+    except requests.exceptions.SSLError:
+            return -99
+    except requests.exceptions.MissingSchema:
+            return -99
 
 
 if __name__ == '__main__':
@@ -25,41 +61,31 @@ if __name__ == '__main__':
     #
     for site_url in WEBSITE_URL:
         print(f"--- Starting process to check website links for {site_url}.")
-        resp = requests.get(site_url)
-        # Note: Content of page is in: resp.content
+        links_list = get_all_urls_on_page(site_url)
 
-        # Parse website with Beautiful Soup, per
-        # https://stackoverflow.com/questions/1080411/retrieve-links-from-web-page-using-python-and-beautifulsoup
-        html_encoding = EncodingDetector.find_declared_encoding(resp.content,
-                                                                is_html=True)
-        soup = BeautifulSoup(resp.content,
-                             from_encoding=html_encoding,
-                             features="html.parser")
+    print(f"""    There are {len(links_list)} links on website.
+    - We're now checking that they all work.
+    - Note: any URLs that don't, will be printed below.""")
 
-        links_list = []
-        for link in soup.find_all('a', href=True):
-            if link['href'] != "#ContactMe":
-                links_list.append(link['href'])
-
-        print(f"""    There are {len(links_list)} links on website.
-        - We're now checking that they all work.
-        - Note: any URLs that don't, will be printed below.""")
-
-        # --- Step 2: Check that all the links still work, and print out those
-        #             that do not for a manual check.
-        #
-        for index, url in enumerate(links_list):
-            if url[0] == '/':
-                url = site_url + url
-            try:
-                # Parsing requests output, per:
-                # https://stackoverflow.com/questions/16778435/python-check-if-website-exists
-                request = requests.get(url)
-                if request.status_code != 200:
-                    print(f"{index}: {request.status_code} for {url}")
-            except requests.exceptions.SSLError:
-                print(f"{index}: {request.status_code} for {url}")
-            except requests.exceptions.MissingSchema:
-            	print(f"{index}: {request.status_code} for {url}")
-        print("--- Process complete.")
-        print()
+    print(links_list)
+    # --- Step 2: Check that all the links still work, and print out those
+    #             that do not for a manual check.
+    #
+    for url in links_list:
+        # Check all links on page:
+        if url[0] == '/':
+            url = site_url + url
+        url_status = get_webpage_status(url)
+        if url_status == -99:
+            print(f"Error in loading url: {url}")
+        else:
+            url_links_list = get_all_urls_on_page(url)
+            # Ignore those that pertain to main webiste that we already checked:
+            url_links_list = [ sub_url for sub_url in url_links_list if sub_url[0] != "/" ]
+            if url_links_list:
+                for sub_url in url_links_list:
+                    url_status = get_webpage_status(sub_url)
+                    if url_status == -99:
+                        print(f"Error in loading url: {sub_url}")
+    print("--- Process complete.")
+    print()
