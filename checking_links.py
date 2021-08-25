@@ -67,6 +67,8 @@ def get_all_urls_on_page(webpage):
 
 def get_webpage_status(webpage):
     """Check that web page exists/load."""
+    if webpage == 'javascript:void(0)':
+        return -99
     try:
         # Parsing requests output, per:
         # https://stackoverflow.com/questions/16778435/python-check-if-website-exists
@@ -76,6 +78,9 @@ def get_webpage_status(webpage):
     except requests.exceptions.SSLError:
             return -99
     except requests.exceptions.MissingSchema:
+            return -99
+    except requests.exceptions.ConnectionError:
+            # For invalid URL:
             return -99
 
 
