@@ -62,6 +62,11 @@ def get_all_urls_on_page(webpage):
     url_list = list(set(url_list))
     # First "if" statement excludes any entries that are empty strings:
     url_list = [ link for link in url_list if link if link[0] != "#" ]
+
+    # Remove checking major sites:
+    url_list = [ link for link in url_list if (("linkedin" not in link) & 
+                                              ("github" not in link) & 
+                                              ("trywhistle" not in link))]
     return url_list
 
 
