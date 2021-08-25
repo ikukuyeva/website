@@ -123,6 +123,7 @@ if __name__ == '__main__':
             print(f"        There are {len(url_links_list)} external links on the page.")    
             if url_links_list:
                 for sub_url in url_links_list:
+                    sub_url = remove_google_redirect_from_url(sub_url)
                     url_status = get_webpage_status(sub_url)
                     if url_status == -99:
                         print(f"Error in loading url: {sub_url}")
