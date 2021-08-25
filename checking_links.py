@@ -12,12 +12,34 @@
         python3 checking_links.py
 """
 
+import urllib.parse
 
 from bs4 import BeautifulSoup
 from bs4.dammit import EncodingDetector
 import requests
 
+
 WEBSITE_URL = ["https://www.ikukuyeva.com"] 
+
+
+def remove_google_redirect_from_url(webpage):
+    if  (webpage.startswith("http://www.google.com/url?q=") | 
+         webpage.startswith("https://www.google.com/url?q=")):
+        # Extract original URL, without Google's redirect links. This is because
+        # if it's webpage that's getting Google's redirect for tracking, we need
+        # to check actual webpage getting redirect to; otherwise if the page is 
+        # not loading, it will look like it is because of the redirct.
+
+        # Start of redirect:
+        webpage = webpage.replace("http://www.google.com/url?q=", "")
+        webpage = webpage.replace("https://www.google.com/url?q=", "")
+        index_end_redirect = webpage.find("&sa=D")
+        webpage = webpage[:index_end_redirect]
+
+        # Convert any symbols in URL to working URL:
+        webpage = urllib.parse.unquote(webpage)
+    return webpage
+
 
 def get_all_urls_on_page(webpage):
     resp = requests.get(webpage)
@@ -74,6 +96,9 @@ if __name__ == '__main__':
         # Check all links on page:
         if url[0] == '/':
             url = site_url + url
+        else:
+            # Check if there's a Google redict to URL and remove it, if exists:
+            url = remove_google_redirect_from_url(url)
         print(f"    {index}. Checking URL: {url}")    
         url_status = get_webpage_status(url)
         if url_status == -99:
