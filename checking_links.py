@@ -76,12 +76,12 @@ def get_webpage_status(webpage):
         if request.status_code != 200:
             return request.status_code
     except requests.exceptions.SSLError:
-            return -99
+        return -99
     except requests.exceptions.MissingSchema:
-            return -99
+        return -99
     except requests.exceptions.ConnectionError:
-            # For invalid URL:
-            return -99
+        # For invalid URL:
+        return -99
 
 
 if __name__ == '__main__':
