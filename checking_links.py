@@ -58,7 +58,7 @@ def get_all_urls_on_page(webpage):
         if link['href'] != "#ContactMe":
             url_list.append(link['href'])
 
-        # Remove duplicates:
+    # Remove duplicates:
     url_list = list(set(url_list))
     # First "if" statement excludes any entries that are empty strings:
     url_list = [ link for link in url_list if link if link[0] != "#" ]
@@ -91,7 +91,8 @@ if __name__ == '__main__':
         print(f"--- Step 1: Starting process to check website links for {site_url}.")
         links_list = get_all_urls_on_page(site_url)
 
-    print(f"""    There are {len(links_list)} links on website.""")
+    # Minor links, because checks to GitHub, LinkedIn and Whistle are ignored:
+    print(f"""    There are {len(links_list)} minor links on website.""")
     print()
     
     # --- Step 2: Check that all the links still work, and print out those
@@ -99,12 +100,13 @@ if __name__ == '__main__':
     #
     print(""""--- Step 2: We're now checking that they all work:""")
     for index, url in enumerate(links_list):
-        # Check all links on page:
+        # Format URL:
         if url[0] == '/':
             url = site_url + url
         else:
             # Check if there's a Google redict to URL and remove it, if exists:
             url = remove_google_redirect_from_url(url)
+        # Check all links on page:
         print(f"    {index}. Checking URL: {url}")    
         url_status = get_webpage_status(url)
         if url_status == -99:
@@ -113,7 +115,7 @@ if __name__ == '__main__':
             url_links_list = get_all_urls_on_page(url)
             # Ignore those that pertain to main webiste that we already checked:
             url_links_list = [ sub_url for sub_url in url_links_list if sub_url[0] != "/" ]
-            print(f"        There are {len(url_links_list)} links on the page.")    
+            print(f"        There are {len(url_links_list)} external links on the page.")    
             if url_links_list:
                 for sub_url in url_links_list:
                     url_status = get_webpage_status(sub_url)
