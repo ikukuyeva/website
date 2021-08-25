@@ -60,7 +60,8 @@ def get_all_urls_on_page(webpage):
 
         # Remove duplicates:
     url_list = list(set(url_list))
-    url_list = [ link for link in url_list if link[0] != "#" ]
+    # First "if" statement excludes any entries that are empty strings:
+    url_list = [ link for link in url_list if link if link[0] != "#" ]
     return url_list
 
 
