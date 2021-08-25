@@ -64,8 +64,8 @@ if __name__ == '__main__':
         links_list = get_all_urls_on_page(site_url)
 
     print(f"""    There are {len(links_list)} links on website.""")
+    print()
     
-    print(links_list)
     # --- Step 2: Check that all the links still work, and print out those
     #             that do not for a manual check.
     #
