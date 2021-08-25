@@ -60,21 +60,21 @@ if __name__ == '__main__':
     # --- Step 1: Get all links from website
     #
     for site_url in WEBSITE_URL:
-        print(f"--- Starting process to check website links for {site_url}.")
+        print(f"--- Step 1: Starting process to check website links for {site_url}.")
         links_list = get_all_urls_on_page(site_url)
 
-    print(f"""    There are {len(links_list)} links on website.
-    - We're now checking that they all work.
-    - Note: any URLs that don't, will be printed below.""")
-
+    print(f"""    There are {len(links_list)} links on website.""")
+    
     print(links_list)
     # --- Step 2: Check that all the links still work, and print out those
     #             that do not for a manual check.
     #
-    for url in links_list:
+    print(""""--- Step 2: We're now checking that they all work:""")
+    for index, url in enumerate(links_list):
         # Check all links on page:
         if url[0] == '/':
             url = site_url + url
+        print(f"    {index}. Checking URL: {url}")    
         url_status = get_webpage_status(url)
         if url_status == -99:
             print(f"Error in loading url: {url}")
@@ -82,6 +82,7 @@ if __name__ == '__main__':
             url_links_list = get_all_urls_on_page(url)
             # Ignore those that pertain to main webiste that we already checked:
             url_links_list = [ sub_url for sub_url in url_links_list if sub_url[0] != "/" ]
+            print(f"        There are {len(url_links_list)} links on the page.")    
             if url_links_list:
                 for sub_url in url_links_list:
                     url_status = get_webpage_status(sub_url)
