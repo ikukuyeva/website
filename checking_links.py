@@ -7,7 +7,7 @@
         pip3 install -r requirements.txt
 
     --- Step 1: After virtual env is created:
-        cd Documents/Consulting/Website/
+        cd Documents/Consulting/Website/Website-repo
         source Envs/env-links/bin/activate
         python3 checking_links.py
 """
@@ -66,7 +66,8 @@ def get_all_urls_on_page(webpage):
     # Remove checking major sites:
     url_list = [ link for link in url_list if (("linkedin" not in link) & 
                                               ("github" not in link) & 
-                                              ("trywhistle" not in link))]
+                                              ("trywhistle" not in link) &
+                                              ("usnews" not in link))]
     return url_list
 
 
@@ -80,6 +81,13 @@ def get_webpage_status(webpage):
         request = requests.get(webpage)
         if request.status_code != 200:
             return request.status_code
+        if "calendly" in webpage:
+            # Convert to string so that can search on webpage:
+            tmp_content = request.content.decode("utf-8")
+            # If Calendly page no longer exists, shows "This Calendly URL is not valid";
+            # error is stored deep in "window.BackendData" when inspect source:
+            if ("URL is not valid" in tmp_content):
+                return -99
     except requests.exceptions.SSLError:
         return -99
     except requests.exceptions.MissingSchema:
