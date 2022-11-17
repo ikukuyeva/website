@@ -7,7 +7,7 @@
         pip3 install -r requirements.txt
 
     --- Step 1: After virtual env is created:
-        cd Documents/Consulting/Website/
+        cd Documents/Consulting/Website/Website-repo
         source Envs/env-links/bin/activate
         python3 checking_links.py
 """
