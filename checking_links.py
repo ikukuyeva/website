@@ -80,6 +80,13 @@ def get_webpage_status(webpage):
         request = requests.get(webpage)
         if request.status_code != 200:
             return request.status_code
+        if "calendly" in webpage:
+            # Convert to string so that can search on webpage:
+            tmp_content = request.content.decode("utf-8")
+            # If Calendly page no longer exists, shows "This Calendly URL is not valid";
+            # error is stored deep in "window.BackendData" when inspect source:
+            if ("URL is not valid" in tmp_content):
+                return -99
     except requests.exceptions.SSLError:
         return -99
     except requests.exceptions.MissingSchema:
