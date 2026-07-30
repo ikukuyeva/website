@@ -67,7 +67,8 @@ def get_all_urls_on_page(webpage):
     url_list = [ link for link in url_list if (("linkedin" not in link) & 
                                               ("github" not in link) & 
                                               ("trywhistle" not in link) &
-                                              ("usnews" not in link))]
+                                              ("usnews" not in link) &
+                                              ("washingtonpost" not in link) &
     return url_list
 
 
