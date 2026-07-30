@@ -67,7 +67,10 @@ def get_all_urls_on_page(webpage):
     url_list = [ link for link in url_list if (("linkedin" not in link) & 
                                               ("github" not in link) & 
                                               ("trywhistle" not in link) &
-                                              ("usnews" not in link))]
+                                              ("usnews" not in link) &
+                                              ("washingtonpost" not in link) &
+                                              ("substack" not in link)
+                                              )]
     return url_list
 
 
@@ -128,6 +131,9 @@ if __name__ == '__main__':
             url_links_list = get_all_urls_on_page(url)
             # Ignore those that pertain to main webiste that we already checked:
             url_links_list = [ sub_url for sub_url in url_links_list if sub_url[0] != "/" ]
+            # Ignore links to my main website from Substack, since we already checked that:
+            url_links_list = [ sub_url for sub_url in url_links_list if "ikukuyeva.com/blog" not in sub_url ]
+
             print(f"        There are {len(url_links_list)} external links on the page.")    
             if url_links_list:
                 for sub_url in url_links_list:
